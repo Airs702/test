@@ -1,0 +1,6 @@
+# Jupyter Book Configuration
+title: Data Analysis Book
+author: Your Name
+language: zh
+execute:
+  execute_notebooks: off

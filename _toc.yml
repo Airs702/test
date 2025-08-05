@@ -1,0 +1,10 @@
+format: jb-book
+root: intro
+
+parts:
+  - caption: Data Analysis
+    chapters:
+      - file: cann1d
+        title: 1D CANN
+      - file: cann2d
+        title: 2D CANN
