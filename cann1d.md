@@ -47,7 +47,7 @@
 ## 可视化示例
 ```python
 import numpy as np
-from brainpy import mcmc
+from utils1d import *
 
 # 加载数据
 print("加载数据...")
@@ -80,4 +80,5 @@ print(f"  - {output_prefix}-centrbump.dat")
 
 **图5. bump 参数动态变化示例**
 
-![Bump parameters visualization]()
+![Bump parameters visualization](bump_1d.gif)
+

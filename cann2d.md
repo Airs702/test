@@ -69,7 +69,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import umap
 from mpl_toolkits.mplot3d import Axes3D
-from brainpy import get_spikes  
+from utils import get_spikes  
 
 # Step 1: 从 npz 文件加载 spike train 并转换为高维点云
 sspikes = get_spikes(npz_path, speed0=False)
@@ -118,7 +118,7 @@ plt.show()
 ### 2. 示例代码
 
 ```python
-from brainpy import TDAvis
+from utils import TDAvis
 persistence = TDAvis(npz_path,
            dim=6,
            num_times=5,
@@ -173,15 +173,19 @@ persistence = TDAvis(npz_path,
 ### 2. 示例代码
 
 ```python
-from brainpy import bump_fit
+from utils import plot_3d_bump_on_torus
 
-bump_fit(
-    spikes,
-    coords,
+plot_3d_bump_on_torus(
+    decoding_path, 
+    spike_path, 
+    output_path='torus_bump.gif',
+    numangsint=51, 
+    r1=1.5, 
+    r2=1.0, 
     window_size=300,
-    frame_step=5,
-    n_frames=200,
-    save_gif='torus_bump.gif'
+    frame_step=5, 
+    n_frames=20, 
+    fps=5
 )
 ```
 ### 3. 输出示例
@@ -191,4 +195,69 @@ bump_fit(
 **图4. 群体神经活动在环面上的 bump 动态可视化**
 
 ![Torus bump](torus_bump_fixed.gif)
+
+ 附录：代码函数概览（Function Overview）
+
+本分析中所使用的 Python 脚本 `brainpy.py` 中包含以下核心函数，涵盖从 spike train 预处理、拓扑数据分析到环面可视化的完整流程：
+
+###  Spike 预处理模块
+
+- **get_spikes**  
+  将 spike train 数据转换为时间对齐矩阵，支持平滑与速度过滤。
+
+- **load_pos**  
+  计算并插值动物位置与速度信息。
+
+---
+
+###  降维与去噪模块
+
+- **pca**  
+  使用主成分分析（PCA）对神经元活动进行降维。
+
+- **sample_denoising**  
+  使用基于密度的贪婪采样方法对高维点云进行降噪。
+
+- **smooth_knn_dist**  
+  平滑 kNN 距离，用于构建图结构的局部带宽。
+
+- **compute_membership_strengths**  
+  计算稀疏图中邻接点对的连接强度。
+
+- **second_build**  
+  在降噪后样本点中重建对称距离矩阵，用于 TDA 分析。
+
+---
+
+###  拓扑数据分析（TDA）
+
+- **TDAvis**  
+  完整执行从 spike 数据到拓扑分析的全过程，并输出持久图。
+
+- **plot_barcode**  
+  可视化拓扑持久图（H0, H1, H2）的条形码图。
+
+---
+
+###  持久同调解码
+
+- **decode_circular_coordinates**  
+  利用 cohomology 结果对神经活动的 bump 位置进行圆环坐标解码。
+
+- **get_coords**  
+  使用 cocycle 信息重建圆形坐标表示。
+
+---
+
+### 环面可视化与 bump 轨迹绘制
+
+- **plot_3d_bump_on_torus**  
+  将 bump 动态活动映射到 3D 环面上，生成 GIF 可视化。
+
+- **smooth_tuning_map**  
+  平滑 bump 活动图，支持周期边界处理。
+
+- **smooth_image**  
+  对带有缺失值（NaN）的图像进行二维平滑和补全。
+
 
